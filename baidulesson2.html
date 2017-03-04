@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <input type="text" id="typing" />
+    <button id="leftOn">左侧入</button>
+    <button id="rightOn">右侧入</button>
+    <button id="leftOut">左侧出</button>
+    <button id="rightOut">右侧出</button>
+    <div id="show"></div>
+</body>
+<script>
+    //获取所需操作的元素
+    var show = document.getElementById("show");
+    var inputNode = document.getElementById("typing");
+    var leftOn = document.getElementById("leftOn");
+    var rightOn = document.getElementById("rightOn");
+    var leftOut = document.getElementById("leftOut");
+    var rightOut = document.getElementById("rightOut");
+    var childNodes = document.getElementById("show").childNodes;
+    var arr = [110, 120, 130];
+
+
+    showContent();
+    bindDeleteEvent()
+
+    //显示排列方法
+    function showContent() {
+        var html = "";
+        for (var i = 0; i < arr.length; i++) {
+            html += `<div style="float:left;background-color:red;height:${arr[i]}px;width:15px;margin:5px">${arr[i]}</div>`;
+        }
+
+        show.innerHTML = html;
+    }
+
+    //绑定点击删除事件
+    function bindDeleteEvent() {
+        for (var i = 0; i < childNodes.length; i++) {
+            (function deleteArray(i) {
+                childNodes[i].addEventListener("click", function () {
+                    arr.splice(i, 1);
+                    showContent()
+                    bindDeleteEvent();
+                })
+            })(i)
+        }
+    }
+
+    //限制个数方法
+    function limitNmber() {
+        var value = inputNode.value;
+        if (!Number(value) || Number(value) < 10 || Number(value) > 100) {
+            inputNode.value = "";
+        }
+        return inputNode.value;
+    }
+
+    //添加或删除方法
+    function newSplice(index, spliceLength, addValue) {
+        if (arr.length > 60) {
+            alert("超过60个了");
+        }
+        if (addValue == null) {
+            arr.splice(index, spliceLength)
+        } else {
+
+            arr.splice(index, spliceLength, addValue)
+        }
+    }
+
+
+    //快速序方法
+    function quickSortMethod(arr) {
+        if (arr.length <= 1) { return arr };
+        var middleIndex = Math.floor(arr.length / 2);
+        var middleValue = arr.splice(middleIndex, 1)[0];
+        var leftArr = [];
+        var rightArr = [];
+        for (var i = 0; i < arr.length; i++) {
+            if (arr[i] < middleValue) {
+                leftArr.push(arr[i]);
+            } else {
+                rightArr.push(arr[i]);
+            }
+        }
+        return quickSortMethod(leftArr).concat([middleValue], quickSortMethod(rightArr));
+    }
+
+    //绑定监听事件
+
+    leftOn.addEventListener("click", function () {
+        if (!limitNmber() || limitNmber() == "") {
+            return
+        }
+        newSplice(0, 0, inputNode.value);
+        arr = quickSortMethod(arr);
+        showContent();
+        bindDeleteEvent();
+    });
+    rightOn.addEventListener("click", function () {
+        if (!limitNmber() || limitNmber() == "") {
+            return
+        }
+        newSplice(length, 0, inputNode.value);
+        arr = quickSortMethod(arr);
+        showContent();
+        bindDeleteEvent();
+    });
+    leftOut.addEventListener("click", function () {
+        newSplice(1, 1);
+        showContent();
+        bindDeleteEvent();
+    });
+    rightOut.addEventListener("click", function () {
+        newSplice(arr.length - 1, 1);
+        showContent();
+        bindDeleteEvent();
+    });
+
+</script>
+
+</html>
