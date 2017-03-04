@@ -6,22 +6,21 @@
     <title>Document</title>
 </head>
 <style>
-    .rectangle {
-        display: inline-block;
-        width: 20px;
-        margin: 5px;
+    .rectangle{
+        display:inline-block;
+        width:20px;
+        margin:5px;
         background-color: red;
     }
 </style>
-
 <body>
     <input type="text" id="typing" />
     <button id="leftOn">左侧入</button>
     <button id="rightOn">右侧入</button>
     <button id="leftOut">左侧出</button>
     <button id="rightOut">右侧出</button>
-    <button id="sortMethodBotton">冒泡排序</button>
-    <div id="show"></div>
+    <button id="sortMethodBotton">排序</button>
+    <div id="show" ></div>
 </body>
 <script>
     //获取所需操作的元素
@@ -34,9 +33,10 @@
     var sortMethodBotton = document.getElementById("sortMethodBotton");
     var childNodes = document.getElementById("show").childNodes;
     var arr = [110, 120, 130];
-    var moveTime = 0;
 
 
+    showContent();
+    bindDeleteEvent()
 
     //显示排列方法
     function showContent() {
@@ -48,6 +48,18 @@
         show.innerHTML = html;
     }
 
+    //绑定点击删除事件
+    function bindDeleteEvent() {
+        for (var i = 0; i < childNodes.length; i++) {
+            (function deleteArray(i) {
+                childNodes[i].addEventListener("click", function () {
+                    arr.splice(i, 1);
+                    showContent()
+                    bindDeleteEvent();
+                })
+            })(i)
+        }
+    }
 
     //限制个数方法
     function limitNmber() {
@@ -73,53 +85,20 @@
 
 
     //快速序方法
-
-    // var quickSortMethod = function (arr) {
-    //     if (arr.length <= 1) { return arr; }
-    //     var pivotIndex = Math.floor(arr.length / 2);
-    //     var pivot = arr.splice(pivotIndex, 1)[0];
-    //     var left = [];
-    //     var right = [];
-    //     for (var i = 0; i < arr.length; i++) {
-    //         if (arr[i] < pivot) {
-    //             left.push(arr[i]);
-    //         } else {
-    //             right.push(arr[i]);
-    //         }
-    //     }
-    //     return quickSortMethod(left).concat([pivot], quickSortMethod(right));
-    // };
-
-    //冒泡排序
-    function bubbleSort() {
-        var index = 0;
-        var timeFlg = setInterval(function () {
-            if (index > arr.length) {
-                clearInterval(timeFlg);
+    function quickSortMethod(arr) {
+        if (arr.length <= 1) { return arr };
+        var middleIndex = Math.floor(arr.length / 2);
+        var middleValue = arr.splice(middleIndex, 1)[0];
+        var leftArr = [];
+        var rightArr = [];
+        for (var i = 0; i < arr.length; i++) {
+            if (arr[i] < middleValue) {
+                leftArr.push(arr[i]);
+            } else {
+                rightArr.push(arr[i]);
             }
-            for (var j = 0; j < arr.length; j++) {
-                if (arr[j] > arr[j + 1]) {
-                    var temp = arr[j];
-                    arr[j] = arr[j + 1];
-                    arr[j + 1] = temp;
-                }
-            }
-            showContent();
-            index++;
-        }, 100);
-
-
-    }
-
-
-    //生成随机数
-    function randomData() {
-        var data = []
-        for (var i = 0; i < 50; i++) {
-            data.push(Math.floor(Math.random() * 90 + 10));
         }
-        arr = data;
-        showContent();
+        return quickSortMethod(leftArr).concat([middleValue], quickSortMethod(rightArr));
     }
 
     //绑定监听事件
@@ -130,35 +109,30 @@
         }
         newSplice(0, 0, inputNode.value);
         showContent();
+        bindDeleteEvent();
     });
     rightOn.addEventListener("click", function () {
         if (!limitNmber() || limitNmber() == "") {
             return
         }
-        newSplice(arr.length, 0, inputNode.value);
+        newSplice(length, 0, inputNode.value);
         showContent();
+        bindDeleteEvent();
     });
     leftOut.addEventListener("click", function () {
-        newSplice(0, 1);
+        newSplice(1, 1);
         showContent();
+        bindDeleteEvent();
     });
     rightOut.addEventListener("click", function () {
         newSplice(arr.length - 1, 1);
         showContent();
+        bindDeleteEvent();
     });
-    sortMethodBotton.addEventListener("click", function () {
-        bubbleSort();
+     sortMethodBotton.addEventListener("click", function () {
+       arr=quickSortMethod(arr);
+       showContent();
     });
-
-    show.addEventListener("click", function (e) {
-        if (e.target && e.target.className == "rectangle") {
-            arr.splice([].indexOf.call(childNodes, e.target), 1);
-            showContent();
-        };
-    });
-
-    randomData();
-    showContent();
 
 </script>
 
