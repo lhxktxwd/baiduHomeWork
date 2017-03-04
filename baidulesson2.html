@@ -5,14 +5,22 @@
     <meta charset="UTF-8">
     <title>Document</title>
 </head>
-
+<style>
+    .rectangle{
+        display:inline-block;
+        width:20px;
+        margin:5px;
+        background-color: red;
+    }
+</style>
 <body>
     <input type="text" id="typing" />
     <button id="leftOn">左侧入</button>
     <button id="rightOn">右侧入</button>
     <button id="leftOut">左侧出</button>
     <button id="rightOut">右侧出</button>
-    <div id="show"></div>
+    <button id="sortMethodBotton">排序</button>
+    <div id="show" ></div>
 </body>
 <script>
     //获取所需操作的元素
@@ -22,6 +30,7 @@
     var rightOn = document.getElementById("rightOn");
     var leftOut = document.getElementById("leftOut");
     var rightOut = document.getElementById("rightOut");
+    var sortMethodBotton = document.getElementById("sortMethodBotton");
     var childNodes = document.getElementById("show").childNodes;
     var arr = [110, 120, 130];
 
@@ -33,7 +42,7 @@
     function showContent() {
         var html = "";
         for (var i = 0; i < arr.length; i++) {
-            html += `<div style="float:left;background-color:red;height:${arr[i]}px;width:15px;margin:5px">${arr[i]}</div>`;
+            html += `<div class=rectangle style="height:${arr[i]}px"></div>`;
         }
 
         show.innerHTML = html;
@@ -99,7 +108,6 @@
             return
         }
         newSplice(0, 0, inputNode.value);
-        arr = quickSortMethod(arr);
         showContent();
         bindDeleteEvent();
     });
@@ -108,7 +116,6 @@
             return
         }
         newSplice(length, 0, inputNode.value);
-        arr = quickSortMethod(arr);
         showContent();
         bindDeleteEvent();
     });
@@ -121,6 +128,10 @@
         newSplice(arr.length - 1, 1);
         showContent();
         bindDeleteEvent();
+    });
+     sortMethodBotton.addEventListener("click", function () {
+       arr=quickSortMethod(arr);
+       showContent();
     });
 
 </script>
